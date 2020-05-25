@@ -31,7 +31,6 @@ BigNumber& BigNumber::operator=(const BigNumber& rightNum)
 
 BigNumber& BigNumber::operator=(BigNumber&& rightNum) noexcept
 {
-	cout << "called";
 	if (&rightNum != this)
 	{
 		sign = rightNum.sign;
@@ -69,7 +68,7 @@ bool BigNumber::operator!=(const BigNumber & myBig) const
 	return !(*this == myBig);
 }
 
-bool BigNumber::operator>=(const BigNumber& myBig) const
+bool BigNumber::operator>=(const BigNumber & myBig) const
 {
 	if (sign == true && myBig.sign == false)
 		return true;
@@ -81,7 +80,7 @@ bool BigNumber::operator>=(const BigNumber& myBig) const
 		return unsignedLessrOrEqual(*this, myBig);
 }
 
-bool BigNumber::operator<=(const BigNumber& myBig) const
+bool BigNumber::operator<=(const BigNumber & myBig) const
 {
 	if (sign == true && myBig.sign == false)
 		return false;
@@ -93,12 +92,12 @@ bool BigNumber::operator<=(const BigNumber& myBig) const
 		return unsignedGreaterOrEqual(*this, myBig);
 }
 
-bool BigNumber::operator>(const BigNumber& myBig) const
+bool BigNumber::operator>(const BigNumber & myBig) const
 {
 	return !(*this <= myBig);
 }
 
-bool BigNumber::operator<(const BigNumber& myBig) const
+bool BigNumber::operator<(const BigNumber & myBig) const
 {
 	return !(*this >= myBig);
 }
@@ -137,7 +136,6 @@ BigNumber BigNumber::operator>>(unsigned shift) const
 	return temp;
 }
 
->>>>>>> Stashed changes
 BigNumber BigNumber::operator-() const
 {
 	BigNumber temp;
@@ -214,7 +212,7 @@ BigNumber BigNumber::unsignedMax(const BigNumber & num1, const BigNumber & num2)
 		return num2;
 }
 
-BigNumber BigNumber::unsignedMin(const BigNumber& num1, const BigNumber& num2)
+BigNumber BigNumber::unsignedMin(const BigNumber & num1, const BigNumber & num2)
 {
 	if (num1.numOfDigits > num2.numOfDigits)
 		return num2;
@@ -231,14 +229,99 @@ BigNumber BigNumber::unsignedMin(const BigNumber& num1, const BigNumber& num2)
 		return num1;
 }
 
-bool BigNumber::unsignedGreaterOrEqual(const BigNumber& num1, const BigNumber& num2)
+bool BigNumber::unsignedGreaterOrEqual(const BigNumber & num1, const BigNumber & num2)
 {
 	return (unsignedMax(num1, num2) == num1);
 }
 
-bool BigNumber::unsignedLessrOrEqual(const BigNumber& num1, const BigNumber& num2)
+bool BigNumber::unsignedLessrOrEqual(const BigNumber & num1, const BigNumber & num2)
 {
 	return (unsignedMin(num2, num1) == num1);
+}
+
+BigNumber BigNumber::unsignedAdd(const BigNumber & num1, const BigNumber & num2)
+{
+	BigNumber bMax = unsignedMax(num1, num2);
+	BigNumber bMin = unsignedMin(num1, num2);
+	BigNumber sum;
+
+	sum.sign = true;
+	sum.numOfDigits = bMax.numOfDigits + 1;
+	sum.numArray = new int8_t[sum.numOfDigits];
+	size_t i = 0;
+	int8_t carry = 0;
+	int8_t s;
+	for (; i < bMin.numOfDigits; i++)
+	{
+		s = bMax[i] + bMin[i] + carry;
+		sum[i] = s % 10;
+		carry = s / 10;
+	}
+	for (; i < bMax.numOfDigits; i++)
+	{
+		s = bMax[i] + carry;
+		sum[i] = s % 10;
+		carry = s / 10;
+	}
+	if (carry == 1)
+		sum[i] = 1;
+	else if (carry == 0)
+	{
+		sum[i] = 0;
+		sum.numOfDigits -= 1;
+	}
+	return sum;
+}
+
+BigNumber BigNumber::unsignedSubtract(const BigNumber & num1, const BigNumber & num2)
+{
+	BigNumber bMax = unsignedMax(num1, num2);
+	BigNumber bMin = unsignedMin(num1, num2);
+	int8_t* nArray = new int8_t[bMax.numOfDigits]{};
+	size_t i = 0;
+	for (; i < bMin.numOfDigits; i++)
+	{
+		if (bMax[i] >= bMin[i])
+		{
+			nArray[i] = bMax[i] - bMin[i];
+		}
+		else if (bMax[i + 1] != 0)
+		{
+			nArray[i] = 10 + bMax[i] - bMin[i];
+			bMax[i + 1] -= 1;
+		}
+		else if ((bMax[i + 1] == 0)) {
+			size_t j = i;
+			while (bMax[j + 1] == 0)
+			{
+				bMax[j + 1] = 9;
+				++j;
+			}
+			bMax[j + 1] -= 1;
+			nArray[i] = 10 + bMax[i] - bMin[i];
+		}
+	}
+	for (; i < bMax.numOfDigits; ++i)
+	{
+		nArray[i] = bMax[i];
+	}
+	int numOfZerosOnTheLeft = 0;
+	size_t index = bMax.numOfDigits - 1;
+	while (nArray[index] == 0 && index > 0)
+	{
+		numOfZerosOnTheLeft++;
+		--index;
+	}
+
+	BigNumber sub;
+	sub.sign = true;
+	sub.numOfDigits = bMax.numOfDigits - numOfZerosOnTheLeft;
+	sub.numArray = new int8_t[sub.numOfDigits];
+	for (size_t i = 0; i < sub.numOfDigits; i++)
+	{
+		sub[i] = nArray[i];
+	}
+	return sub;
 }
 
 BigNumber::BigNumber(const string & str)
@@ -305,8 +388,8 @@ std::istream& operator>>(std::istream & input, BigNumber & myBig)
 	return input;
 }
 
+BigNumber operator+(const BigNumber& num1, const BigNumber& num2)
 
-BigNumber operator+(const BigNumber & num1, const BigNumber & num2)
 {
 	BigNumber sum;
 	if (num1.sign == num2.sign)
@@ -326,7 +409,7 @@ BigNumber operator+(const BigNumber & num1, const BigNumber & num2)
 	return sum;
 }
 
-BigNumber operator-(const BigNumber & num1, const BigNumber & num2)
+BigNumber operator-(const BigNumber& num1, const BigNumber& num2)
 {
 	BigNumber sub;
 	if (num1.sign == num2.sign)
