@@ -1,6 +1,6 @@
 #include "BigNumber.h"
 #include <stdexcept>
-
+#include <iostream>
 using namespace std;
 
 unsigned int BigNumber::getNumOfDigits() const
@@ -29,8 +29,9 @@ BigNumber& BigNumber::operator=(const BigNumber& rightNum)
 	return *this;
 }
 
-BigNumber& BigNumber::operator=(BigNumber&& rightNum)
+BigNumber& BigNumber::operator=(BigNumber&& rightNum) noexcept
 {
+	cout << "called";
 	if (&rightNum != this)
 	{
 		sign = rightNum.sign;
@@ -49,7 +50,7 @@ int BigNumber::operator[](size_t index) const
 	return numArray[index];
 }
 
-bool BigNumber::operator==(const BigNumber& myBig) const
+bool BigNumber::operator==(const BigNumber & myBig) const
 {
 	if (sign != myBig.sign)
 		return false;
@@ -63,7 +64,7 @@ bool BigNumber::operator==(const BigNumber& myBig) const
 	return true;
 }
 
-bool BigNumber::operator!=(const BigNumber& myBig) const
+bool BigNumber::operator!=(const BigNumber & myBig) const
 {
 	return !(*this == myBig);
 }
@@ -81,7 +82,7 @@ BigNumber BigNumber::operator-() const
 	return temp;
 }
 
-void BigNumber::setValues(const std::string& str)
+void BigNumber::setValues(const std::string & str)
 {
 	if (!validate(str, "[+-]?[0-9]+"))
 	{
@@ -102,13 +103,13 @@ void BigNumber::setValues(const std::string& str)
 		sign = true;
 }
 
-bool BigNumber::validate(const std::string& str, const std::string& pattern)
+bool BigNumber::validate(const std::string & str, const std::string & pattern)
 {
 	regex regPattern(pattern);
 	return regex_match(str, regPattern);
 }
 
-unsigned BigNumber::numOfTrimCharsOnLeft(const std::string& str)
+unsigned BigNumber::numOfTrimCharsOnLeft(const std::string & str)
 {
 	unsigned numOfChars = 0;
 	size_t i = 0;
@@ -127,13 +128,41 @@ int8_t& BigNumber::operator[](size_t index)
 	return numArray[index];
 }
 
-BigNumber BigNumber::unsignedMax(const BigNumber& num1, const BigNumber& num2)
+BigNumber BigNumber::unsignedMax(const BigNumber & num1, const BigNumber & num2)
 {
 	if (num1.numOfDigits > num2.numOfDigits)
 		return num1;
+	if (num1.numOfDigits < num2.numOfDigits)
+		return num2;
+	size_t index = num1.numOfDigits - 1;
+	while (num1[index] == num2[index] && index > 0)
+	{
+		--index;
+	}
+	if (num1[index] >= num2[index])
+		return num1;
+	if (num1[index] < num2[index])
+		return num2;
 }
 
-BigNumber::BigNumber(const string& str)
+BigNumber BigNumber::unsignedMin(const BigNumber& num1, const BigNumber& num2)
+{
+	if (num1.numOfDigits > num2.numOfDigits)
+		return num2;
+	if (num1.numOfDigits < num2.numOfDigits)
+		return num1;
+	size_t index = num1.numOfDigits - 1;
+	while (num1[index] == num2[index] && index > 0)
+	{
+		--index;
+	}
+	if (num1[index] >= num2[index])
+		return num2;
+	if (num1[index] < num2[index])
+		return num1;
+}
+
+BigNumber::BigNumber(const string & str)
 {
 	setValues(str);
 }
@@ -153,11 +182,11 @@ BigNumber::BigNumber(const long& intNum)
 	for (size_t i = 0; i < numOfDigits; i++)
 	{
 		numArray[i] = temp2 % 10;
-		temp2 =temp2 / 10;
+		temp2 = temp2 / 10;
 	}
 }
 
-BigNumber::BigNumber(BigNumber& myBig)
+BigNumber::BigNumber(const BigNumber & myBig)
 {
 	sign = myBig.sign;
 	numOfDigits = myBig.numOfDigits;
@@ -168,7 +197,7 @@ BigNumber::BigNumber(BigNumber& myBig)
 	}
 }
 
-BigNumber::BigNumber(BigNumber&& myBig) noexcept : sign{myBig.sign} , numOfDigits{myBig.numOfDigits} , numArray{myBig.numArray}
+BigNumber::BigNumber(BigNumber && myBig) noexcept : sign{ myBig.sign }, numOfDigits{ myBig.numOfDigits }, numArray{ myBig.numArray }
 {
 	myBig.numArray = nullptr;
 }
@@ -178,7 +207,7 @@ BigNumber::~BigNumber()
 	delete[] numArray;
 }
 
-std::ostream& operator<<(std::ostream& output, const BigNumber& myBig)
+std::ostream& operator<<(std::ostream & output, const BigNumber & myBig)
 {
 	if (myBig.sign == false)
 		output << '-';
@@ -189,7 +218,7 @@ std::ostream& operator<<(std::ostream& output, const BigNumber& myBig)
 	return output;
 }
 
-std::istream& operator>>(std::istream& input, BigNumber& myBig)
+std::istream& operator>>(std::istream & input, BigNumber & myBig)
 {
 	string str;
 	input >> str;

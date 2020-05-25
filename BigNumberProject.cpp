@@ -7,9 +7,10 @@ int main()
 {
 	cout << boolalpha;
 	BigNumber x = 200;
-	string str = "200";
+	string str = "-100";
 	BigNumber y(str);
 	cout <<( y!=x) << endl;
-	
-	cout << y<<endl;
+	BigNumber c = -y;
+	cout << c<<endl;
+	cout << BigNumber::unsignedMin(x, y);
 }
