@@ -1,6 +1,5 @@
 #include "BigNumber.h"
 #include <stdexcept>
-#include <iostream>
 
 using namespace std;
 
@@ -43,7 +42,7 @@ unsigned BigNumber::numOfTrimCharsOnLeft(const std::string& str)
 {
 	unsigned numOfChars = 0;
 	size_t i = 0;
-	while (str[i] == '0' || str[i] == '-' || str[i] == '+')
+	while (i < str.size() - 1 && str[i] == '0' || str[i] == '-' || str[i] == '+')
 	{
 		++numOfChars;
 		++i;
@@ -100,4 +99,12 @@ std::ostream& operator<<(std::ostream& output, const BigNumber& myBig)
 		output << (int8_t)(myBig.numArray[i] + 48);
 	}
 	return output;
+}
+
+std::istream& operator>>(std::istream& input, BigNumber& myBig)
+{
+	string str;
+	input >> str;
+	myBig.setValues(str);
+	return input;
 }

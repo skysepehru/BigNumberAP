@@ -6,6 +6,7 @@
 class BigNumber
 {
 	friend std::ostream& operator<<(std::ostream& output, const BigNumber& myBig);
+	friend std::istream& operator>>(std::istream& input, BigNumber& myBig);
 private:
 	bool sign;
 	int8_t* numArray = nullptr;
