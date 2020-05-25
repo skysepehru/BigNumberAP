@@ -43,5 +43,7 @@ public:
 	bool operator<=(const BigNumber&) const;
 	bool operator>(const BigNumber&) const;
 	bool operator<(const BigNumber&) const;
+	BigNumber absolouteValue() const;
+	BigNumber operator>>(unsigned shift) const;
 };
 

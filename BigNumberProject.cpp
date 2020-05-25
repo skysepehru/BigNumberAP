@@ -6,8 +6,8 @@ using namespace std;
 int main()
 {
 	cout << boolalpha;
-	BigNumber x = 99;
-	string str = "100";
+	BigNumber x = -80;
+	string str = "2228234";
 	BigNumber y(str);
-	cout << (x < y);
+	cout << (y>>5);
 }

@@ -102,7 +102,42 @@ bool BigNumber::operator<(const BigNumber& myBig) const
 {
 	return !(*this >= myBig);
 }
+BigNumber BigNumber::absolouteValue() const
+{
+	BigNumber temp;
+	temp.sign = true;
+	temp.numOfDigits = numOfDigits;
+	temp.numArray = new int8_t[numOfDigits];
+	for (size_t i = 0; i < numOfDigits; i++)
+	{
+		temp.numArray[i] = numArray[i];
+	}
+	return temp;
+}
 
+BigNumber BigNumber::operator>>(unsigned shift) const
+{
+	if (numOfDigits < shift)
+		throw invalid_argument("Shift must be less than digit count");
+	BigNumber temp;
+	if (numOfDigits == shift)
+	{
+		temp = "0";
+	}
+	else
+	{
+		temp.sign = sign;
+		temp.numOfDigits = numOfDigits - shift;
+		temp.numArray = new int8_t[temp.numOfDigits];
+		for (size_t i = 0; i < temp.numOfDigits; ++i)
+		{
+			temp[i] = numArray[i + shift];
+		}
+	}
+	return temp;
+}
+
+>>>>>>> Stashed changes
 BigNumber BigNumber::operator-() const
 {
 	BigNumber temp;
@@ -268,4 +303,41 @@ std::istream& operator>>(std::istream & input, BigNumber & myBig)
 	input >> str;
 	myBig.setValues(str);
 	return input;
+}
+
+
+BigNumber operator+(const BigNumber & num1, const BigNumber & num2)
+{
+	BigNumber sum;
+	if (num1.sign == num2.sign)
+	{
+		sum = BigNumber::unsignedAdd(num1, num2);
+		sum.sign = num1.sign;
+	}
+	else
+	{
+		sum = BigNumber::unsignedSubtract(num1, num2);
+		sum.sign = BigNumber::unsignedMax(num1, num2).sign;
+	}
+	if (sum.numOfDigits == 1 && sum[0] == 0)
+	{
+		sum.sign = true;
+	}
+	return sum;
+}
+
+BigNumber operator-(const BigNumber & num1, const BigNumber & num2)
+{
+	BigNumber sub;
+	if (num1.sign == num2.sign)
+	{
+		sub = BigNumber::unsignedSubtract(num1, num2);
+		sub.sign = num1.sign;
+	}
+	else
+	{
+		sub = BigNumber::unsignedAdd(num1, num2);
+		sub.sign = BigNumber::unsignedMax(num1, num2).sign;
+	}
+	return sub;
 }
