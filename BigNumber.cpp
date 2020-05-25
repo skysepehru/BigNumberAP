@@ -29,7 +29,14 @@ BigNumber& BigNumber::operator=(const BigNumber& rightNum)
 	return *this;
 }
 
-BigNumber BigNumber::operator-()
+int BigNumber::operator[](size_t index) const
+{
+	if (index < 0 || index >= numOfDigits)
+		throw out_of_range("the index is out of range");
+	return numArray[index];
+}
+
+BigNumber BigNumber::operator-() const
 {
 	BigNumber temp;
 	temp.sign = !sign;
@@ -77,6 +84,13 @@ unsigned BigNumber::numOfTrimCharsOnLeft(const std::string& str)
 		++i;
 	}
 	return numOfChars;
+}
+
+int8_t& BigNumber::operator[](size_t index)
+{
+	if (index < 0 || index >= numOfDigits)
+		throw out_of_range("the index is out of range");
+	return numArray[index];
 }
 
 BigNumber::BigNumber(const string& str)
