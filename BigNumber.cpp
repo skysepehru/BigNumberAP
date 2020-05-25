@@ -69,7 +69,7 @@ bool BigNumber::operator!=(const BigNumber & myBig) const
 	return !(*this == myBig);
 }
 
-bool BigNumber::operator>=(const BigNumber& myBig) const
+bool BigNumber::operator>=(const BigNumber & myBig) const
 {
 	if (sign == true && myBig.sign == false)
 		return true;
@@ -81,7 +81,7 @@ bool BigNumber::operator>=(const BigNumber& myBig) const
 		return unsignedLessrOrEqual(*this, myBig);
 }
 
-bool BigNumber::operator<=(const BigNumber& myBig) const
+bool BigNumber::operator<=(const BigNumber & myBig) const
 {
 	if (sign == true && myBig.sign == false)
 		return false;
@@ -93,14 +93,27 @@ bool BigNumber::operator<=(const BigNumber& myBig) const
 		return unsignedGreaterOrEqual(*this, myBig);
 }
 
-bool BigNumber::operator>(const BigNumber& myBig) const
+bool BigNumber::operator>(const BigNumber & myBig) const
 {
 	return !(*this <= myBig);
 }
 
-bool BigNumber::operator<(const BigNumber& myBig) const
+bool BigNumber::operator<(const BigNumber & myBig) const
 {
 	return !(*this >= myBig);
+}
+
+BigNumber BigNumber::absolouteValue() const
+{
+	BigNumber temp;
+	temp.sign = true;
+	temp.numOfDigits = numOfDigits;
+	temp.numArray = new int8_t[numOfDigits];
+	for (size_t i = 0; i < numOfDigits; i++)
+	{
+		temp.numArray[i] = numArray[i];
+	}
+	return temp;
 }
 
 BigNumber BigNumber::operator-() const
@@ -179,7 +192,7 @@ BigNumber BigNumber::unsignedMax(const BigNumber & num1, const BigNumber & num2)
 		return num2;
 }
 
-BigNumber BigNumber::unsignedMin(const BigNumber& num1, const BigNumber& num2)
+BigNumber BigNumber::unsignedMin(const BigNumber & num1, const BigNumber & num2)
 {
 	if (num1.numOfDigits > num2.numOfDigits)
 		return num2;
@@ -196,14 +209,48 @@ BigNumber BigNumber::unsignedMin(const BigNumber& num1, const BigNumber& num2)
 		return num1;
 }
 
-bool BigNumber::unsignedGreaterOrEqual(const BigNumber& num1, const BigNumber& num2)
+bool BigNumber::unsignedGreaterOrEqual(const BigNumber & num1, const BigNumber & num2)
 {
 	return (unsignedMax(num1, num2) == num1);
 }
 
-bool BigNumber::unsignedLessrOrEqual(const BigNumber& num1, const BigNumber& num2)
+bool BigNumber::unsignedLessrOrEqual(const BigNumber & num1, const BigNumber & num2)
 {
 	return (unsignedMin(num2, num1) == num1);
+}
+
+BigNumber BigNumber::unsignedAdd(const BigNumber & num1, const BigNumber & num2)
+{
+	BigNumber bMax = unsignedMax(num1, num2);
+	BigNumber bMin = unsignedMin(num1, num2);
+	BigNumber sum;
+
+	sum.sign = true;
+	sum.numOfDigits = bMax.numOfDigits + 1;
+	sum.numArray = new int8_t[sum.numOfDigits];
+	size_t i = 0;
+	int8_t carry = 0;
+	int8_t s;
+	for (; i < bMin.numOfDigits; i++)
+	{
+		s = bMax[i] + bMin[i] + carry;
+		sum[i] = s % 10;
+		carry = s / 10;
+	}
+	for (; i < bMax.numOfDigits; i++)
+	{
+		s = bMax[i] + carry;
+		sum[i] = s % 10;
+		carry = s / 10;
+	}
+	if (carry == 1)
+		sum[i] = 1;
+	else if (carry == 0)
+	{
+		sum[i] = 0;
+		sum.numOfDigits -= 1;
+	}
+	return sum;
 }
 
 BigNumber::BigNumber(const string & str)

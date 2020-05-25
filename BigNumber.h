@@ -23,6 +23,8 @@ public:
 	static BigNumber unsignedMin(const BigNumber& num1, const BigNumber& num2);
 	static bool unsignedGreaterOrEqual(const BigNumber& num1, const BigNumber& num2);
 	static bool unsignedLessrOrEqual(const BigNumber& num1, const BigNumber& num2);
+	static BigNumber unsignedAdd(const BigNumber& num1, const BigNumber& num2);
+	static BigNumber unsignedSubtract(const BigNumber& num1, const BigNumber& num2);
 
 	BigNumber(const std::string& str);
 	BigNumber(const char* myCharArray): BigNumber((std::string)myCharArray){}
@@ -43,5 +45,6 @@ public:
 	bool operator<=(const BigNumber&) const;
 	bool operator>(const BigNumber&) const;
 	bool operator<(const BigNumber&) const;
+	BigNumber absolouteValue() const;
 };
 
