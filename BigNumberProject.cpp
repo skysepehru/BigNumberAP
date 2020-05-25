@@ -9,5 +9,5 @@ int main()
 	BigNumber x = -80;
 	string str = "80";
 	BigNumber y(str);
-	cout << BigNumber::unsignedAdd(x,y);
+	cout << y+x;
 }
