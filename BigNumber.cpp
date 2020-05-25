@@ -13,6 +13,22 @@ bool BigNumber::getSign() const
 	return sign;
 }
 
+BigNumber& BigNumber::operator=(const BigNumber& rightNum)
+{
+	if (&rightNum != this)
+	{
+		sign = rightNum.sign;
+		numOfDigits = rightNum.numOfDigits;
+		delete[] numArray;
+		numArray = new int8_t[numOfDigits];
+		for (size_t i = 0; i < numOfDigits; i++)
+		{
+			numArray[i] = rightNum.numArray[i];
+		}
+	}
+	return *this;
+}
+
 void BigNumber::setValues(const std::string& str)
 {
 	if (!validate(str, "[+-]?[0-9]+"))
