@@ -1,13 +1,11 @@
 #include <iostream>
-#include "BigNumber.h"
-
+#include "MyBigNumber.h"
 using namespace std;
 
 int main()
 {
-	cout << boolalpha;
-	BigNumber x = -80;
-	string str = "2228234";
-	BigNumber y(str);
-	cout << (y>>5);
+	MyBigNumber big1{ 1253 };
+	MyBigNumber big2{ 5534 };
+	cout << big1.toString() << endl;
+	cout << endl << big2.toString(3);
 }

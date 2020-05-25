@@ -1,6 +1,7 @@
 #include "BigNumber.h"
 #include <stdexcept>
-#include <iostream>
+#include <sstream>
+
 using namespace std;
 
 unsigned int BigNumber::getNumOfDigits() const
@@ -133,6 +134,47 @@ BigNumber BigNumber::operator>>(unsigned shift) const
 			temp[i] = numArray[i + shift];
 		}
 	}
+	return temp;
+}
+
+std::string BigNumber::toString() const
+{
+	ostringstream output;
+	if (!sign)
+	{
+		output << '-';
+	}
+
+	for (int i = numOfDigits - 1; i >= 0; --i)
+	{
+		output << (int8_t)(numArray[i] + 48);
+	}
+	return output.str();
+}
+
+BigNumber& BigNumber::operator++()
+{
+	(*this) = *this + 1;
+	return *this;
+}
+
+BigNumber& BigNumber::operator--()
+{
+	(*this) = *this - 1;
+	return *this;
+}
+
+BigNumber BigNumber::operator++(int)
+{
+	BigNumber temp = *this;
+	(*this) = *this + 1;
+	return temp;
+}
+
+BigNumber BigNumber::operator--(int)
+{
+	BigNumber temp = *this;
+	(*this) = *this - 1;
 	return temp;
 }
 
@@ -334,10 +376,17 @@ BigNumber::BigNumber(const long& intNum)
 	sign = intNum >= 0;
 	long temp = abs(intNum);
 	numOfDigits = 0;
-	while (temp > 0)
+	if (temp == 0)
 	{
-		numOfDigits++;
-		temp = temp / 10;
+		numOfDigits = 1;
+	}
+	else
+	{
+		while (temp > 0)
+		{
+			numOfDigits++;
+			temp = temp / 10;
+		}
 	}
 	numArray = new int8_t[numOfDigits];
 	long temp2 = abs(intNum);
@@ -388,7 +437,7 @@ std::istream& operator>>(std::istream & input, BigNumber & myBig)
 	return input;
 }
 
-BigNumber operator+(const BigNumber& num1, const BigNumber& num2)
+BigNumber operator+(const BigNumber & num1, const BigNumber & num2)
 
 {
 	BigNumber sum;
@@ -409,18 +458,25 @@ BigNumber operator+(const BigNumber& num1, const BigNumber& num2)
 	return sum;
 }
 
-BigNumber operator-(const BigNumber& num1, const BigNumber& num2)
+BigNumber operator-(const BigNumber & num1, const BigNumber & num2)
 {
 	BigNumber sub;
 	if (num1.sign == num2.sign)
 	{
 		sub = BigNumber::unsignedSubtract(num1, num2);
-		sub.sign = num1.sign;
+		if (BigNumber::unsignedMax(num1, num2) == num1)
+			sub.sign = num1.sign;
+		else if (BigNumber::unsignedMax(num1, num2) == num2)
+			sub.sign = !num1.sign;
 	}
 	else
 	{
 		sub = BigNumber::unsignedAdd(num1, num2);
 		sub.sign = BigNumber::unsignedMax(num1, num2).sign;
+	}
+	if (sub.numOfDigits == 1 && sub[0] == 0)
+	{
+		sub.sign = true;
 	}
 	return sub;
 }

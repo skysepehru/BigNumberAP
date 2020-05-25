@@ -153,9 +153,11 @@
   <ItemGroup>
     <ClCompile Include="BigNumber.cpp" />
     <ClCompile Include="BigNumberProject.cpp" />
+    <ClCompile Include="MyBigNumber.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BigNumber.h" />
+    <ClInclude Include="MyBigNumber.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

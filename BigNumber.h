@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdint>
 #include <string>
 #include <regex>
@@ -9,7 +10,9 @@ class BigNumber
 	friend std::istream& operator>>(std::istream& input, BigNumber& myBig);
 	friend BigNumber operator+(const BigNumber& num1, const BigNumber& num2);
 	friend BigNumber operator-(const BigNumber& num1, const BigNumber& num2);
-private:
+
+protected:
+
 	bool sign;
 	int8_t* numArray = nullptr;
 	unsigned numOfDigits;
@@ -17,10 +20,6 @@ private:
 	bool validate(const std::string& str, const std::string& pattern);
 	unsigned numOfTrimCharsOnLeft(const std::string& str);
 	int8_t& operator[](size_t index);
-	
-
-public:
-
 	static BigNumber unsignedMax(const BigNumber& num1, const BigNumber& num2);
 	static BigNumber unsignedMin(const BigNumber& num1, const BigNumber& num2);
 	static bool unsignedGreaterOrEqual(const BigNumber& num1, const BigNumber& num2);
@@ -28,8 +27,10 @@ public:
 	static BigNumber unsignedAdd(const BigNumber& num1, const BigNumber& num2);
 	static BigNumber unsignedSubtract(const BigNumber& num1, const BigNumber& num2);
 
+public:
+
 	BigNumber(const std::string& str);
-	BigNumber(const char* myCharArray): BigNumber((std::string)myCharArray){}
+	BigNumber(const char* myCharArray) : BigNumber((std::string)myCharArray) {}
 	BigNumber(const long& intNum);
 	BigNumber(const BigNumber& myBig);
 	BigNumber(BigNumber&& myBig) noexcept;
@@ -49,5 +50,10 @@ public:
 	bool operator<(const BigNumber&) const;
 	BigNumber absolouteValue() const;
 	BigNumber operator>>(unsigned shift) const;
+	std::string toString() const;
+	BigNumber& operator++();
+	BigNumber& operator--();
+	BigNumber operator++(int);
+	BigNumber operator--(int);
 };
 
