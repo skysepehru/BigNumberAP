@@ -29,6 +29,19 @@ BigNumber& BigNumber::operator=(const BigNumber& rightNum)
 	return *this;
 }
 
+BigNumber& BigNumber::operator=(BigNumber&& rightNum)
+{
+	if (&rightNum != this)
+	{
+		sign = rightNum.sign;
+		numOfDigits = rightNum.numOfDigits;
+		delete[] numArray;
+		numArray = rightNum.numArray;
+		rightNum.numArray = nullptr;
+	}
+	return *this;
+}
+
 int BigNumber::operator[](size_t index) const
 {
 	if (index < 0 || index >= numOfDigits)
@@ -114,6 +127,12 @@ int8_t& BigNumber::operator[](size_t index)
 	return numArray[index];
 }
 
+BigNumber BigNumber::unsignedMax(const BigNumber& num1, const BigNumber& num2)
+{
+	if (num1.numOfDigits > num2.numOfDigits)
+		return num1;
+}
+
 BigNumber::BigNumber(const string& str)
 {
 	setValues(str);
@@ -147,6 +166,11 @@ BigNumber::BigNumber(BigNumber& myBig)
 	{
 		numArray[i] = myBig.numArray[i];
 	}
+}
+
+BigNumber::BigNumber(BigNumber&& myBig) noexcept : sign{myBig.sign} , numOfDigits{myBig.numOfDigits} , numArray{myBig.numArray}
+{
+	myBig.numArray = nullptr;
 }
 
 BigNumber::~BigNumber()
