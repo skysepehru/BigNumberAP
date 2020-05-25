@@ -1,5 +1,6 @@
 #include "BigNumber.h"
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
@@ -63,21 +64,21 @@ BigNumber::BigNumber(const long& intNum)
 	while (temp > 0)
 	{
 		numOfDigits++;
-		temp / 10;
+		temp = temp / 10;
 	}
 	numArray = new int8_t[numOfDigits];
 	long temp2 = abs(intNum);
 	for (size_t i = 0; i < numOfDigits; i++)
 	{
 		numArray[i] = temp2 % 10;
-		temp2 / 10;
+		temp2 =temp2 / 10;
 	}
 }
 
 BigNumber::BigNumber(BigNumber& myBig)
 {
 	sign = myBig.sign;
-	numOfDigits = myBig.getNumOfDigits;
+	numOfDigits = myBig.numOfDigits;
 	numArray = new int8_t[numOfDigits];
 	for (size_t i = 0; i < numOfDigits; i++)
 	{
@@ -94,9 +95,9 @@ std::ostream& operator<<(std::ostream& output, const BigNumber& myBig)
 {
 	if (myBig.sign == false)
 		output << '-';
-	for (int i = myBig.getNumOfDigits - 1; i >= 0; i--)
+	for (int i = myBig.numOfDigits - 1; i >= 0; i--)
 	{
-		output << (int8_t)myBig.numArray[i] + 48;
+		output << (int8_t)(myBig.numArray[i] + 48);
 	}
 	return output;
 }
