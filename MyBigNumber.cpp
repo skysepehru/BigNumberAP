@@ -49,7 +49,7 @@ MyBigNumber& MyBigNumber::operator=(const MyBigNumber & myBigNumber)
 	return *this;
 }
 
-BigNumber& MyBigNumber::operator=(MyBigNumber && myBigNumber) noexcept
+MyBigNumber& MyBigNumber::operator=(MyBigNumber && myBigNumber) noexcept
 {
 	if (&myBigNumber != this)
 	{
@@ -80,5 +80,22 @@ std::string MyBigNumber::toString(int numOfHello) const
 	}
 	output << BigNumber::toString();
 	return output.str();
+}
+
+MyBigNumber MyBigNumber::operator<<(unsigned shift) const
+{
+	MyBigNumber myBig;
+	myBig.sign = sign;
+	myBig.numOfDigits = numOfDigits + shift;
+	myBig.numArray = new int8_t[numOfDigits + shift];
+	for (int i = numOfDigits + shift - 1; i > shift - 1; i--)
+	{
+		myBig[i] = (*this)[i - shift];
+	}
+	for (size_t i = 0; i < shift; i++)
+	{
+		myBig[i] = 0;
+	}
+	return myBig;
 }
 

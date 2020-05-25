@@ -16,8 +16,9 @@ public:
 	MyBigNumber(const MyBigNumber& myBig);
 	MyBigNumber(MyBigNumber&& myBig) noexcept;
 	MyBigNumber& operator=(const MyBigNumber& myBigNumber);
-	BigNumber& operator=(MyBigNumber&& rightNum) noexcept;
+	MyBigNumber& operator=(MyBigNumber&& rightNum) noexcept;
 	std::string toString() const;
 	std::string toString(int numOfHello) const;
+	MyBigNumber operator<<(unsigned shift) const;
 };
 
