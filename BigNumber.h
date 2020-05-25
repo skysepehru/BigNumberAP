@@ -11,7 +11,7 @@ private:
 	bool sign;
 	int8_t* numArray = nullptr;
 	unsigned numOfDigits;
-
+	BigNumber() {}
 	bool validate(const std::string& str, const std::string& pattern);
 	unsigned numOfTrimCharsOnLeft(const std::string& str);
 
@@ -24,5 +24,6 @@ public:
 	unsigned int getNumOfDigits() const;
 	bool getSign()const;
 	BigNumber& operator=(const BigNumber& rightNum);
+	BigNumber operator-();
 };
 

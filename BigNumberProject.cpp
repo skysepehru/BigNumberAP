@@ -10,6 +10,6 @@ int main()
 	string str = "-00000005675";
 	BigNumber y(str);
 	cout << y << endl;
-	x = y;
+	x = -y;
 	cout << x<<endl;
 }
