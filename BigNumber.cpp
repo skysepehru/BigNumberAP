@@ -36,6 +36,25 @@ int BigNumber::operator[](size_t index) const
 	return numArray[index];
 }
 
+bool BigNumber::operator==(const BigNumber& myBig) const
+{
+	if (sign != myBig.sign)
+		return false;
+	if (numOfDigits != myBig.numOfDigits)
+		return false;
+	for (size_t i = 0; i < numOfDigits; i++)
+	{
+		if (myBig[i] != (*this)[i])
+			return false;
+	}
+	return true;
+}
+
+bool BigNumber::operator!=(const BigNumber& myBig) const
+{
+	return !(*this == myBig);
+}
+
 BigNumber BigNumber::operator-() const
 {
 	BigNumber temp;
@@ -66,6 +85,8 @@ void BigNumber::setValues(const std::string& str)
 	{
 		numArray[i] = str[str.size() - 1 - i] - 48;
 	}
+	if (numOfDigits == 1 && numArray[0] == 0)
+		sign = true;
 }
 
 bool BigNumber::validate(const std::string& str, const std::string& pattern)
